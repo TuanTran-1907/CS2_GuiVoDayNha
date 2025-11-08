@@ -230,15 +230,28 @@ class Askpass(Toplevel):
                     fg='white',
                     font=("Montserrat Black", 12, "bold"),
                     width=3, height=1,
-                    command=lambda n=num[index]: self.askEntry.insert(END, n)
+                    command=lambda n=num[index]: self.add(n)
                 ).grid(row=i, column=j, padx=(3,0), pady=(2,0))
                 index += 1
 
-        Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=lambda:self.askEntry.delete(len(self.askEntry.get())-1,END)).grid(row=2, column=3, padx=(3,0), pady=(2,0))
-        Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=lambda:self.askEntry.insert(END, "0")).pack(pady=(0,2))
+        Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=self.deletee).grid(row=2, column=3, padx=(3,0), pady=(2,0))
+        Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=self.add0).pack(pady=(0,2))
         Button(self, text="Xác nhận", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.pass_in).pack()
 
+    def add(self,n):
+        music.btn_sound()
+        self.askEntry.insert(END, n)
+
+    def add0(self):
+        music.btn_sound()
+        self.askEntry.insert(END, "0")
+
+    def deletee(self):
+        music.btn_sound()
+        self.askEntry.delete(len(self.askEntry.get())-1,END)
+
     def pass_in(self):
+        music.btn_sound()
         pp = self.askEntry.get().strip()
         data = load_pripass()
         for item in data:
@@ -276,14 +289,27 @@ class addPass(Toplevel):
                     fg='white',
                     font=("Montserrat Black", 12, "bold"),
                     width=3, height=1,
-                    command=lambda n=num[index]: self.askEntry.insert(END, n)
+                    command=lambda n=num[index]: self.add(n)
                 ).grid(row=i, column=j, padx=(3,0), pady=2)
                 index += 1
-        Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=lambda:self.askEntry.delete(len(self.askEntry.get())-1,END)).grid(row=2, column=3, padx=(3,0), pady=2)
-        Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=lambda:self.askEntry.insert(END, "0")).pack(pady=(0,2))
+        Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=self.deletee).grid(row=2, column=3, padx=(3,0), pady=2)
+        Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=self.add0).pack(pady=(0,2))
         Button(self, text="Xác nhận", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.confirm).pack()
 
+    def add(self,n):
+        music.btn_sound()
+        self.askEntry.insert(END, n)
+
+    def add0(self):
+        music.btn_sound()
+        self.askEntry.insert(END, "0")
+
+    def deletee(self):
+        music.btn_sound()
+        self.askEntry.delete(len(self.askEntry.get())-1,END)
+
     def confirm(self):
+        music.btn_sound()
         pp = self.askEntry.get().strip()
         if not pp:
             messagebox.showwarning("Cảnh báo", "Không được để trống!")
@@ -417,11 +443,13 @@ class ArduinoFrame(Tk):
         self.menubar.add_cascade(label='FILE',menu=self.filmeme)
         self.filmeme.add_command(label='Music on',command=self.play)
         self.filmeme.add_command(label='Music off',command=self.stop)
+        self.filmeme.add_separator()
         self.filmeme.add_command(label='QUIT',command=quit)
 
         self.timelabel = Label(self,fg="#db7509",bg="#f6fbef",font = ("Montserrat Black",16))
         self.timelabel.grid(row=0, column=0,padx=45,pady=(75, 0))
         self.update_time()
+
         # Frame label
         frameL = Frame(self,bg="#f6fbef")
         frameL.grid(row=1, column=0,padx=45,pady=(3, 0))
@@ -432,6 +460,7 @@ class ArduinoFrame(Tk):
         self.label_temp.pack(side='left',padx=(0,10))
         self.label_hum.pack(side='left',padx=(75,5))
         self.label_soil.pack(side='left',padx=(75,0))
+
         # Frame cobo vs label
         self.frameCl = Frame(self,bg="#f6fbef")
         self.frameCl.grid(row=3, column=0,padx=1,pady=(15, 30))
@@ -442,8 +471,8 @@ class ArduinoFrame(Tk):
         frameLE.grid(row=7, column=0)
 
         Label(frameLE, text="HẸN GIỜ TƯỚI(HH:MM): ",background="#f6fbef",fg='#138a00',font=("Montserrat Black",14)).pack(side="left")
-
-        self.combo = ttk.Combobox(self.frameCl,values=list(self.cay_list.keys()), font=("Montserrat Black",14),foreground="#138a00")
+        
+        self.combo = ttk.Combobox(self.frameCl,values=list(self.cay_list.keys()),font=("Montserrat Black",14),foreground="#138a00")
         self.combo.pack(side="left")
         self.combo.bind("<<ComboboxSelected>>", self.on_select_cay)
 
@@ -474,6 +503,7 @@ class ArduinoFrame(Tk):
 
         self.entry_time = Entry(frameLE,bd=2)
         self.entry_time.pack(side="left")
+
         # Frame cua scale
         framS = Frame(self,background="#f6fbef")
         framS.grid(row=4,column=0,pady=10)
@@ -512,12 +542,15 @@ class ArduinoFrame(Tk):
         except Exception as e:
             messagebox.showerror("Lỗi", f"Gửi lệnh thất bại: {e}")
     def on_water(self):
+        music.btn_sound()
         self.send_command(b'a')
     
     def cua_mo(self):
+        music.btn_sound()
         self.send_command(b'o')
 
     def cua_dong(self):
+        music.btn_sound()
         self.send_command(b'c')
 
     def update_time(self):
@@ -527,6 +560,7 @@ class ArduinoFrame(Tk):
         self.after(1000, self.update_time) 
 
     def sendVal(self,value):
+        music.btn_sound()
         self.send_command(f"S{value}".encode())
         if int(value) > 0:
            self.addHis("Độ sáng",f"{value}")
@@ -880,11 +914,7 @@ class App(Tk):
         self.destroy()
         main = ArduinoFrame()
         main.mainloop()
-        
-    def show_login_frame(self):
-        self.arduino_frame.pack_forget()
-        self.login_frame.pack(fill="both", expand=True)
 
 if __name__ == "__main__":
-    app = ArduinoFrame()
+    app = App()
     app.mainloop()
