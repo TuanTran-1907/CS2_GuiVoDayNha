@@ -50,10 +50,10 @@ def find_arduino_port():
         try:
             arduino = serial.Serial(port=arduino_port, baudrate=9600, timeout=1)
             time.sleep(2)
-            print(f"Kết nối Arduino cổng: {arduino_port}")
+            print(f"Connected Arduino Port: {arduino_port}")
             return arduino
         except Exception as e:
-            print("Không tìm thấy cổng", e)
+            print("Finding Port fail", e)
             return None
     else:
         print("Lỗi kết nối")
@@ -191,12 +191,12 @@ class LoginFrame(Frame):
         user = self.user_entry.get().strip()
         password = self.pass_entry.get().strip()
         if not user or not password:
-            messagebox.showwarning("Cảnh báo", "Vui lòng nhập username và password.")
+            messagebox.showwarning("Warning", "Please enter username and password.")
             return
         if check_login(user, password):
             self.show_users_frame()
         else:
-            messagebox.showerror("Lỗi", "Sai username hoặc password.")
+            messagebox.showerror("Error", "Wrong username or password.")
 
     def open_register_window(self):
         music.btn_sound()
@@ -207,7 +207,7 @@ class Askpass(Toplevel):
         super().__init__(master)
         self.username = username
         self.openApp = openApp
-        self.title(f"Nhập private pass ({username})")
+        self.title(f"Enter private pass ({username})")
         self.resizable(False, False)
         self.ask_widgets()
         self.transient(master)
@@ -215,7 +215,7 @@ class Askpass(Toplevel):
 
     def ask_widgets(self):
         self.config(bg="#f6fbef")
-        Label(self, text=f"Nhập mật khẩu riêng của {self.username}",fg='#138a00',bg="#f6fbef", font=("Montserrat Black", 10, "bold")).pack()
+        Label(self, text=f"Enter pripass for {self.username}",fg='#138a00',bg="#f6fbef", font=("Montserrat Black", 10, "bold")).pack()
         self.askEntry = Entry(self, show="*",width=15,fg="#89cd3d",font=("Montserrat Black", 12, "bold"))
         self.askEntry.pack()
         keypad = Frame(self,bg="#f6fbef")
@@ -236,7 +236,7 @@ class Askpass(Toplevel):
 
         Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=self.deletee).grid(row=2, column=3, padx=(3,0), pady=(2,0))
         Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=self.add0).pack(pady=(0,2))
-        Button(self, text="Xác nhận", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.pass_in).pack()
+        Button(self, text="Confirm", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.pass_in).pack()
 
     def add(self,n):
         music.btn_sound()
@@ -256,17 +256,17 @@ class Askpass(Toplevel):
         data = load_pripass()
         for item in data:
             if item.get("user") == self.username and item.get("pripass") == pp:
-                messagebox.showinfo("Thành công", "Đăng nhập thành công!")
+                messagebox.showinfo("Success", "Login success!")
                 self.destroy()
                 self.openApp()
                 return
-        messagebox.showerror("Lỗi", "Sai mật khẩu riêng!")
+        messagebox.showerror("Error", "Wrong pripass!")
 
 class addPass(Toplevel):
     def __init__(self, master, username):
         super().__init__(master)
         self.username = username
-        self.title(f"Tạo pripass cho {username}")
+        self.title(f"Create pripass for {username}")
         self.resizable(False, False)
         self.addP_widgets()
         self.transient(master)
@@ -274,7 +274,7 @@ class addPass(Toplevel):
 
     def addP_widgets(self):
         self.config(bg="#f6fbef")
-        Label(self, text=f"Tạo mật khẩu riêng cho {self.username}",fg='#138a00',bg="#f6fbef", font=("Montserrat Black", 10, "bold")).pack()
+        Label(self, text=f"Create pripass for {self.username}",fg='#138a00',bg="#f6fbef", font=("Montserrat Black", 10, "bold")).pack()
         self.askEntry = Entry(self, show="*",width=15,fg="#89cd3d",font=("Montserrat Black", 12, "bold"))
         self.askEntry.pack()
         keypad = Frame(self,bg="#f6fbef")
@@ -294,7 +294,7 @@ class addPass(Toplevel):
                 index += 1
         Button(keypad, text="<-", font=("Montserrat Black", 12, "bold"),bg="#89cd3d",fg='white',command=self.deletee).grid(row=2, column=3, padx=(3,0), pady=2)
         Button(self, text="0", font=("Montserrat Black", 12, "bold"),width=3, height=1,bg="#89cd3d",fg='white',command=self.add0).pack(pady=(0,2))
-        Button(self, text="Xác nhận", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.confirm).pack()
+        Button(self, text="Confirm", font=("Montserrat Black", 10, "bold"),bg="#89cd3d",fg='white',command=self.confirm).pack()
 
     def add(self,n):
         music.btn_sound()
@@ -312,10 +312,10 @@ class addPass(Toplevel):
         music.btn_sound()
         pp = self.askEntry.get().strip()
         if not pp:
-            messagebox.showwarning("Cảnh báo", "Không được để trống!")
+            messagebox.showwarning("Warning", "Do not let it empty!")
             return
         if any(c in invalid_char for c in pp) or " " in pp:
-            messagebox.showerror("Lỗi", "Không dùng ký tự đặc biệt!")
+            messagebox.showerror("Error", "No special keyword!")
             return
         if len(pp) == 6:
             if not os.path.exists(PPASS_FILE):
@@ -341,17 +341,17 @@ class addPass(Toplevel):
             # ghi lại
             with open(PPASS_FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
-            messagebox.showinfo("Thành công", "Tạo mặt khẩu thành công")
+            messagebox.showinfo("Success", "Set pass success")
             self.destroy()
         else:
-            messagebox.showerror("Lỗi", "Mật khẩu dài 6 ký tự")
+            messagebox.showerror("Error", "Pass is lenght of 6 letter")
             self.askEntry.delete(0,END)
 
 # Sign up
 class RegisterWindow(Toplevel):
     def __init__(self, master):
         super().__init__(master)
-        self.title("Đăng ký tài khoản")
+        self.title("Sign Up")
         self.geometry("620x320")
         self.resizable(False, False)
         self.config(bg="#f6fbef")
@@ -390,19 +390,19 @@ class RegisterWindow(Toplevel):
         pw = self.pass_entry.get()
         pwc = self.pass_confirm.get()
         if not user or not pw or not pwc:
-            messagebox.showwarning("Không để trống")
+            messagebox.showwarning("Do not let it empty")
             return
         if any(c in invalid_char for c in pw) or " " in pw:
-            messagebox.showerror("","Không sài ký tự đặc biệt")
+            messagebox.showerror("","No special keyword")
             return
         if pw != pwc:
-            messagebox.showerror("","Mật khẩu xác nhận không khớp")
+            messagebox.showerror("","Password are not the same")
             return
         success = save_account(user, pw)
         if not success:
-            messagebox.showerror("","Tài khoản có rồi")
+            messagebox.showerror("","The username has been used")
         else:
-            messagebox.showinfo("Thành công", "Ok đăng nhập đi")
+            messagebox.showinfo("Success", "Ok you can login now")
             self.destroy()
 
     def cancel(self):
@@ -454,23 +454,23 @@ class ArduinoFrame(Tk):
         frameL = Frame(self,bg="#f6fbef")
         frameL.grid(row=1, column=0,padx=45,pady=(3, 0))
 
-        self.label_temp = Label(frameL, text="NHIỆT ĐỘ: -- °C", fg='#138a00',background="#f6fbef",font=("Montserrat Black",12))
-        self.label_hum = Label(frameL, text="ĐỘ ẨM: -- %", fg='#138a00',background="#f6fbef",font=("Montserrat Black",12))
-        self.label_soil = Label(frameL, text="ĐỘ ẨM ĐẤT: -- %",background="#f6fbef",fg='#138a00',font=("Montserrat Black",12),)
+        self.label_temp = Label(frameL, text="TEMP: -- °C", fg='#138a00',background="#f6fbef",font=("Montserrat Black",12))
+        self.label_hum = Label(frameL, text="HUM: -- %", fg='#138a00',background="#f6fbef",font=("Montserrat Black",12))
+        self.label_soil = Label(frameL, text="DIRT HUM: -- %",background="#f6fbef",fg='#138a00',font=("Montserrat Black",12),)
         self.label_temp.pack(side='left',padx=(0,10))
         self.label_hum.pack(side='left',padx=(75,5))
         self.label_soil.pack(side='left',padx=(75,0))
 
         # Frame cobo vs label
         self.frameCl = Frame(self,bg="#f6fbef")
-        self.frameCl.grid(row=3, column=0,padx=1,pady=(15, 30))
-        Label(self.frameCl, text="CHỌN CÂY:",fg="#89cd3d",background="#f6fbef",font=("Montserrat Black",14)).pack(side="left",padx=(1,0),pady=6)
+        self.frameCl.grid(row=3, column=0,pady=(15, 30))
+        Label(self.frameCl, text="PLANT:",fg="#89cd3d",background="#f6fbef",font=("Montserrat Black",14)).pack(side="left",padx=(1,0),pady=6)
 
         # Frame label
         frameLE = Frame(self,background="#f6fbef")
         frameLE.grid(row=7, column=0)
 
-        Label(frameLE, text="HẸN GIỜ TƯỚI(HH:MM): ",background="#f6fbef",fg='#138a00',font=("Montserrat Black",14)).pack(side="left")
+        Label(frameLE, text="SET TIME(HH:MM): ",background="#f6fbef",fg='#138a00',font=("Montserrat Black",14)).pack(side="left")
         
         self.combo = ttk.Combobox(self.frameCl,values=list(self.cay_list.keys()),font=("Montserrat Black",14),foreground="#138a00")
         self.combo.pack(side="left")
@@ -482,7 +482,7 @@ class ArduinoFrame(Tk):
         self.his.grid(row=10,column=0,columnspan=3)
 
         framcheck = Frame(self,background="#f6fbef")
-        framcheck.grid(row=9,column=0,columnspan=3,pady=6)
+        framcheck.grid(row=9,column=0,columnspan=3,padx=(10,0),pady=6)
         self.x = StringVar()
         self.index = list(self.time_set.keys())
         for i in self.time_set.keys():
@@ -499,7 +499,7 @@ class ArduinoFrame(Tk):
                                        indicatoron=0,
                                        command=lambda v=i: self.toggle_radio(v)
                                        )
-            self.timeSet.pack(side = "left",padx=20)
+            self.timeSet.pack(side = "left",padx=22)
 
         self.entry_time = Entry(frameLE,bd=2)
         self.entry_time.pack(side="left")
@@ -524,23 +524,34 @@ class ArduinoFrame(Tk):
         framdoor = Frame(self,background="#f6fbef")
         framdoor.grid(row=8,column=0,columnspan=3)
 
-        Button(frame_4, text="Đọc DHT", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.read_DHT).pack(side='left',padx=10)
-        Button(frame_4, text="Mở rèm", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_thuan).pack(side='left',padx=10)
-        Button(frame_4, text="Đóng rèm", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_nguoc).pack(side='left',padx=10)
-        Button(frame_4, text="Dừng rèm", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_dung).pack(side='left',padx=10)
+        Button(frame_4, text="DHT", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.read_DHT).pack(side='left',padx=10)
+        Button(frame_4, text="Op Roof", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_thuan).pack(side='left',padx=10)
+        Button(frame_4, text="Off Roof", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_nguoc).pack(side='left',padx=10)
+        Button(frame_4, text="Stop Roof", background="#89cd3d",fg='white',font=("Montserrat Black",14),command=self.rem_dung).pack(side='left',padx=10)
         Button(framcheck, text="ON", background="#89cd3d",width=4,fg='white',font=("Montserrat Black",13),command=self.on_water).pack(side = "left",padx=20)
         Button(framcheck, text="OFF", background="#89cd3d",width=4,fg='white',font=("Montserrat Black",13),command=self.off_water).pack(side = "left",padx=20)
+        Button(framcheck, text="TIME Del", background="#89cd3d",width=7,fg='white',font=("Montserrat Black",13),command=self.deletetime).pack(side = "left",padx=(4,0))
         Button(framdoor, text="OPEN", background="#89cd3d",width=4,fg='white',font=("Montserrat Black",13),command=self.cua_mo).pack(side = "left",padx=25,pady=(7,3))
         Button(framdoor, text="SHUT", background="#89cd3d",width=4,fg='white',font=("Montserrat Black",13),command=self.cua_dong).pack(side = "left",padx=25,pady=(7,3))
 
     def send_command(self, cmd: bytes):
         if not arduino:
-            messagebox.showerror("Lỗi", "Không kết nối Arduino.")
+            messagebox.showerror("Error", "Arduino connected fail")
             return
         try:
             arduino.write(cmd)
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Gửi lệnh thất bại: {e}")
+            messagebox.showerror("Error", f"Gửi lệnh thất bại: {e}")
+
+    def deletetime(self):
+        if os.path.exists(DATA_FILE):
+            mes = messagebox.askyesno("Warning","Do you want to delete the time has been set before?")
+            if mes:
+                os.remove(DATA_FILE)
+            messagebox.showinfo("info","Deleted")
+        else:
+            messagebox.showinfo("Empty","There is no timeset in the list")
+
     def on_water(self):
         music.btn_sound()
         self.send_command(b'a')
@@ -615,36 +626,36 @@ class ArduinoFrame(Tk):
     def read_DHT(self):
         music.btn_sound()
         if not arduino:
-            messagebox.showerror("Lỗi", "Không kết nối Arduino.")
+            messagebox.showerror("Error", "Arduino connected fail")
             return
         try:
             arduino.write(b'5')
-            self.addHis("Đã đọc: ","DHT")
+            self.addHis("Active ","DHT")
             self.after(300, self.update_DHT)
         except Exception as e:
-            print("Lỗi gửi lệnh DHT:", e)
+            print("DHT reading error", e)
 
     def update_DHT(self):
         try:
             line = arduino.readline().decode().strip()
             if "," in line:
                 t, h = line.split(",", 1)
-                self.label_temp.config(text=f"Nhiệt độ: {t}°C")
-                self.label_hum.config(text=f"Độ ẩm: {h}%")
+                self.label_temp.config(text=f"TEMP: {t}°C")
+                self.label_hum.config(text=f"HUM: {h}%")
             else:
-                print("Dòng nhận được (DHT):", repr(line))
+                print("line: ", repr(line))
         except Exception as e:
-            print("Lỗi đọc DHT:", e)
+            print("DHT reading error", e)
 
     def read_soil(self):
         if not arduino:
-            messagebox.showerror("Lỗi", "Không kết nối Arduino.")
+            messagebox.showerror("Error", "Arduino connected fail")
             return
         try:
             arduino.write(b'1')
             self.after(300, self.update_soil)
         except Exception as e:
-            print("Lỗi gửi lệnh soil:", e)
+            print("soil reading error:", e)
 
     def update_soil(self):
         try:
@@ -652,41 +663,41 @@ class ArduinoFrame(Tk):
             if ":" in line:
                 parts = line.split(":", 1)
                 value = int(parts[1].strip())
-                self.label_soil.config(text=f"Độ ẩm đất: {value}%")
+                self.label_soil.config(text=f"HUM: {value}%")
                 if value >= 1000:
-                    mes = messagebox.askyesno("Thông báo độ ẩm","Có cần tưới thêm nước?")
+                    mes = messagebox.askyesno("HUM announce","Dirt kinda dry, Do you want to watering?")
                     if mes:
-                        print("Đang tưới nước...")
+                        print("Watering...")
                         arduino.write(b'a')
                         self.after(5000, self.off_water)
             else:
-                print("Không đọc được:", repr(line))
+                print("Cant't read:", repr(line))
         except Exception as e:
-            print("Lỗi đọc Soil:", e)
+            print("Soild reading error: ", e)
 
     def set_alarm(self, event=None):
         alarm_time = self.entry_time.get().strip()
         if not alarm_time:
-            messagebox.showwarning("Lỗi", "Không để trống thời gian hẹn!")
+            messagebox.showwarning("Error", "The timeset is empty")
             return
         try:
             datetime.datetime.strptime(alarm_time, "%H:%M")
         except ValueError:
-            messagebox.showerror("Lỗi", "Sai định dạng(HH:MM)")
+            messagebox.showerror("Error", "Please following the format(HH:MM)")
             return
         
         save_time(alarm_time)
         data = load_time()
         if any(item.get("start_time") == alarm_time for item in data):
-            messagebox.showinfo("Thành công", f"Hẹn giờ tưới lúc {alarm_time}")
+            messagebox.showinfo("Success", f"Time has been set:  {alarm_time}")
             
         else:
-            messagebox.showerror("Lỗi", "Không thể lưu thời gian")
+            messagebox.showerror("Error", "Can not set the time")
         stime = self.x.get()
         wtime = self.time_set.get(stime) * 1000 if self.time_set.get(stime) else 3000
         self.after(1000, lambda: self.check_alarm(alarm_time, wtime))
         self.entry_time.delete(0,END)
-        self.addHis("Đã hẹn giờ", f"{alarm_time}")
+        self.addHis("Time has been set", f"{alarm_time}")
     
     def show_time_remaining(self,alarm_time):
         try:
@@ -700,23 +711,23 @@ class ArduinoFrame(Tk):
             hours = (total_seconds // 3600)%60
             minutes = (total_seconds % 3600) // 60
 
-            msg = f"Còn {hours} giờ {minutes} phút trước khi tưới"
+            msg = f"{hours}h : {minutes}m before watering"
             messagebox.showinfo("Thời gian còn lại", msg)
         except Exception as e:
-            messagebox.showerror("Lỗi", f"Không thể tính thời gian còn lại!")
+            messagebox.showerror("Error", f"Time count error")
 
     def off_water(self):
         music.btn_sound()
         self.send_command(b'b')
         if os.path.exists(DATA_FILE):
-            mes = messagebox.askyesno("Hẹn lịch tưới lại","Bạn có muốn giữ lại lịch tưới cũ không?")
+            mes = messagebox.askyesno("Timeset","Do you want to keep the old time set?")
             if not mes:
                 os.remove(DATA_FILE)
 
     def check_alarm(self, alarm_time, wtime):
         current_time = datetime.datetime.now().strftime("%H:%M")
         if current_time == alarm_time:
-            self.addHis("Đã tưới nước",f"{alarm_time}")
+            self.addHis("Watering success",f"{alarm_time}")
             self.send_command(b'a')
             self.after(wtime, lambda: self.off_water())
             return
@@ -727,11 +738,11 @@ class ArduinoFrame(Tk):
         if int(value) == 1:
             self.scaleFan.config(label="FAN ON",fg="green",troughcolor="green")
             self.send_command(b'B')
-            self.addHis("Đã mở","Quạt")
+            self.addHis("ON","FAN")
         else:
             self.scaleFan.config(label="FAN OFF",fg="white",troughcolor="white")
             self.send_command(b't')
-            self.addHis("Đã tắt","Quạt")
+            self.addHis("OFF","FAN")
 
     def addHis(self,state,devices):
         time = datetime.datetime.now().strftime("%H:%M:%S")
@@ -756,11 +767,6 @@ class ArduinoFrame(Tk):
     def stop(self):
         music.stop_music()
 
-    # def logout(self):
-    #     # Quay lại màn hình login
-    #     self.master.show_login_frame()
-
-
 class addColor(Toplevel,ArduinoFrame):
     def __init__(self,cay_list,combo,scaleLED,his,thongbao,bright):
         super().__init__()
@@ -770,7 +776,7 @@ class addColor(Toplevel,ArduinoFrame):
         self.his = his
         self.thongbao = thongbao
         self.bright = bright
-        self.title("Chọn màu")
+        self.title("Color sheet")
         self.geometry("320x220")
         self.resizable(False, False)
         self.addP_widgets()
@@ -783,10 +789,10 @@ class addColor(Toplevel,ArduinoFrame):
         frm.place(x=10,y=20)
         frm1 = Frame(self)
         frm1.place(x=110,y=70)
-        Label(frm,text="NHẬP TÊN CÂY: ",font=("Montserrat Black",10)).grid(row=0,column=0)
+        Label(frm,text="TREE: ",font=("Montserrat Black",10)).grid(row=0,column=0)
         self.entryAdd = Entry(frm,font=("Montserrat Black",10))
         self.entryAdd.grid(row=0,column=1)
-        Label(frm1,text="CHỌN MÀU ",font=("Montserrat Black",14)).grid(row=1,column=0)
+        Label(frm1,text="Choose color below:",font=("Montserrat Black",14)).grid(row=1,column=0)
         for i in range(len(self.color)):
             btn = Button(frm_c,text=self.color[i].upper(),font=("Montserrat Black",20),width=2,bg=colorwheel[i],
                          command= lambda color = self.color[i]:  self.read(color))
@@ -828,7 +834,7 @@ class Users(Frame):
         self.frm_2.pack(pady=10, padx=10)
 
         self.title1 = Button(
-            self.frm_1, text="Xin Chào, Ai Đang Sử Dụng?",
+            self.frm_1, text="HOLAA, WHO'S THEREee?",
             fg="#f6fbef", bg="#056429", font=("Montserrat Black", 20, 'bold'),
             disabledforeground="white", state='disable'
         )
@@ -849,7 +855,7 @@ class Users(Frame):
             btn.grid(row=1, column=i, padx=(5, 0))
 
         self.frm_h = Frame(self, bg="#f6fbef")
-        self.frm_h.place(x=150, y=150)
+        self.frm_h.place(x=188, y=150)
 
     def Hola(self, name):
         self.bg.config(image= self.lala)
@@ -857,10 +863,10 @@ class Users(Frame):
         self.frm_2.pack_forget()
         Label(
             self.frm_h,
-            text=f"Chào mừng quay lại {name}",
+            text=f"Welcome back {name}",
             fg="#138a00",
             bg="#f6fbef",
-            font=("Montserrat Black",16)
+            font=("Montserrat Black",18, "italic")
         ).pack()
 
     def checkb_openApp(self, name):
@@ -869,8 +875,8 @@ class Users(Frame):
         item = next((it for it in pripass_list if it.get("user") == name), None)
         if item is None:
             create = messagebox.askyesno(
-                "Chưa có mật khẩu",
-                f"{name} chưa có mật khẩu riêng.\nBạn có muốn tạo không?"
+                "Password empty",
+                f"{name} has not had the pripass yet\nWanna get one?"
             )
             if create:
                 addPass(self, name)  
@@ -879,8 +885,8 @@ class Users(Frame):
             return
         if not item.get("pripass"):
             create = messagebox.askyesno(
-                "Chưa có mật khẩu",
-                f"{name} chưa có mật khẩu riêng.\nBạn có muốn tạo không?"
+                "Password empty",
+                f"{name} has not had the pripass yet\nWanna get one?"
             )
             if create:
                 addPass(self, name)
@@ -916,5 +922,5 @@ class App(Tk):
         main.mainloop()
 
 if __name__ == "__main__":
-    app = App()
+    app = ArduinoFrame()
     app.mainloop()
