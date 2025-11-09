@@ -612,11 +612,13 @@ class ArduinoFrame(Tk):
         music.btn_sound()
         self.send_command(b'7')
         self.addHis("Đã mở","Rèm")
+        self.after(2500,self.rem_dung)
 
     def rem_nguoc(self):
         music.btn_sound()
         self.send_command(b'8')
         self.addHis("Đã đóng","Rèm")
+        self.after(2500,self.rem_dung)
 
     def rem_dung(self):
         music.btn_sound()
